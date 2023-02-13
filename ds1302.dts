@@ -1,0 +1,53 @@
+/dts-v1/;
+/plugin/;
+
+/*
+// linux/include/dt-bindings/pinctrl/bcm2835.h
+#ifndef __DT_BINDINGS_PINCTRL_BCM2835_H__
+#define __DT_BINDINGS_PINCTRL_BCM2835_H__
+
+// brcm,function property
+#define BCM2835_FSEL_GPIO_IN    0
+#define BCM2835_FSEL_GPIO_OUT   1
+#define BCM2835_FSEL_ALT5   2
+#define BCM2835_FSEL_ALT4   3
+#define BCM2835_FSEL_ALT0   4
+#define BCM2835_FSEL_ALT1   5
+#define BCM2835_FSEL_ALT2   6
+#define BCM2835_FSEL_ALT3   7
+
+// brcm,pull property
+#define BCM2835_PUD_OFF     0
+#define BCM2835_PUD_DOWN    1
+#define BCM2835_PUD_UP      2
+*/
+
+/ {
+    compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&soc>;
+		__overlay__ {
+			yohda_ds1302 {
+				compatible = "yohda,ds1302";			
+
+				// 디바이스트리에만 pin config를 작성한다고 적용이 되는 거이 아니므로, ds1302에서 설정을 해줘야한다. 그래서 해당 노드를 불러올 수 있게 작성.
+				pinctrl-names = "default";
+				pinctrl-0 = <&ds1302_pinconf>;
+				
+				// gpio에 대한 설정값을 가져오기 프로퍼티 선언. `[name-]gpios` `[name-]gpio` 프로퍼티를 선언해서 드라이버에서 값을 불러올 수 있다.
+				ds1302-gpios = <&gpio 17 0>, <&gpio 22 0>, <&gpio 27 0>;
+			};
+		};
+	};
+
+	fragment@1  {
+		target = <&gpio>;
+		__overlay__ {
+			ds1302_pinconf: ds1302_pinconf {
+				brcm,pins = <17 22 27>; // CE SCLK IO
+				brcm,function = <1 1 1>; // 매크로를 인식하지 못해 에러 발생하므로, 실제 숫자로 작성.
+			};
+		};
+	};
+};

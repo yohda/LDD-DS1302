@@ -1,3 +1,6 @@
+# devietree object
+*.dtbo
+
 # Prerequisites
 *.d
 
